@@ -1,5 +1,17 @@
 var state = {
-	items: []
+	items: [{
+		displayName: 'apples',
+		checkedOff: false
+	},{
+		displayName: 'oranges',
+		checkedOff: false
+	},{
+		displayName: 'milk',
+		checkedOff: true
+	},{
+		displayName: 'bread',
+		checkedOff: false
+	}]
 };
 
 var listItemTemplate = (
@@ -41,7 +53,7 @@ function renderItem(item, itemId, itemTemplate, itemDataAttr) {
 	var element = $(itemTemplate);
 	element.find('.js-shopping-item').text(item.displayName);
 	if (item.checkedOff) {
-		element.find('.js-shopping-item').addClass('shopping-item_checked');
+		element.find('.js-shopping-item').addClass('shopping-item__checked');
 	}
 	element.find('.js-shopping-item-toggle')
 	element.attr(itemDataAttr, itemId);
@@ -73,6 +85,7 @@ function handleItemDeletes(formElement, removeIdentifier, itemDataAttr, listElem
  		var itemIndex = parseInt($(this).closest('li').attr(itemDataAttr));
  		deleteItem(state, itemIndex);
  		renderList(state, listElement, itemDataAttr);
+ 		
  	})
  }
 
@@ -80,11 +93,13 @@ function handleItemToggles(listElement, toggleIdentifier, itemDataAttr, state) {
 	listElement.on('click', toggleIdentifier, function(event) {
 		var itemId = $(event.currentTarget.closest('li')).attr(itemDataAttr);
 		var oldItem = getItem(state, itemId);
-
+        console.log(itemId);
+        console.log(oldItem);
 		updateItem(state, itemId, {
 			displayName: oldItem.displayName,
 			checkedOff: !oldItem.checkedOff
 		});
+
 		renderList(state, listElement, itemDataAttr)
 	});
 }
@@ -104,4 +119,5 @@ $(function() {
 	handleItemAdds(formElement, newItemIdentifier, itemDataAttr, listElement, state);
 	handleItemDeletes(formElement, removeIdentifier, itemDataAttr, listElement, state);
 	handleItemToggles(listElement, toggleIdentifier, itemDataAttr, state);
+	renderList(state, listElement, itemDataAttr);
 });
